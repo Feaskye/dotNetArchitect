@@ -10,12 +10,11 @@ using DotNetty.Transport.Channels.Sockets;
 using Examples.Common;
 
 
-
 namespace Discard.Server
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task RunServerAsync()
         {
             ExampleHelper.SetConsoleLogger();
 
