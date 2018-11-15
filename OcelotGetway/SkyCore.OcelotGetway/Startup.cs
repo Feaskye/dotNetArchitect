@@ -42,14 +42,15 @@ namespace SkyCore.OcelotGetway
             };
             services.AddOcelot().AddAhphOcelot(option =>
             {
-                //option.DbConnectionStrings = "Server=localhost;Database=Ctr_AuthPlatform;User ID=root;Password=bl123456;";
-                option.DbConnectionStrings = "Server=.;Database=Ctr_AuthPlatform;User ID=sa;Password=bl123456;";
-                option.RedisConnectionStrings = new List<string>() {         "192.168.1.111:6379,password=bl123456,defaultDatabase=0,poolsize=50,ssl=false,writeBuffer=10240,connectTimeout=1000,connectRetry=1;"
+                option.DbConnectionStrings = "server=localhost;database=ocelotgetwaydb;user=root;password=123456;";//port=3306;SslMode=none;
+                //option.DbConnectionStrings = "Server=.;Database=ocelotgetwaydb;User ID=sa;Password=123;";
+                option.RedisConnectionStrings = new List<string>() {
+                    "192.168.204.128:6379,password=,defaultDatabase=0,poolsize=50,ssl=false,writeBuffer=10240,connectTimeout=1000,connectRetry=1;"
                 };
                 //option.EnableTimer = true;//启用定时任务
                 //option.TimerDelay = 10 * 000;//周期10秒
             })
-            //.UseMySql()
+            .UseMySql()
             .AddAdministration("/SkyOcelot", isOptions);
 
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
@@ -68,7 +69,6 @@ namespace SkyCore.OcelotGetway
             }
 
             app.UseAhphOcelot().Wait();
-
 
             //app.UseStaticFiles();
             //app.UseCookiePolicy();
