@@ -12,10 +12,6 @@ namespace ABPWebDemo.Controllers
     {
         public IActionResult Index()
         {
-            Task.Yield();
-
-
-
             return View();
         }
 

@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Abp;
+using Abp.AspNetCore;
+using ABPWebDemo.Models;
+using Castle.Facilities.Logging;
 
 namespace ABPWebDemo
 {
@@ -31,9 +34,9 @@ namespace ABPWebDemo
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
+            services.AddAbp<IdServerModule>(options=> options.IocManager.IocContainer.AddFacility<LoggingFacility>());//
             //services.AddAbp<MyProjectWebModule>();
-            
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
