@@ -1,4 +1,4 @@
-##		Ocelot网关使用
+##		Ocelot网关（用于自学提升）
 
 ASP.NET Core中Ocelot的使用：API网关的应用：
 https://mp.weixin.qq.com/s/7ZXNsrK9g4RMeVb0QlBiXQ
