@@ -36,12 +36,13 @@ namespace SkyCore.OcelotGetway
 
             Action<IdentityServerAuthenticationOptions> isOptions = o =>
             {
-                o.Authority = "http://localhost:6611"; //IdentityServer地址
+                o.Authority = "http://localhost:61492"; //IdentityServer地址
                 o.RequireHttpsMetadata = false;
                 o.ApiName = "gateway_admin"; //网关管理的名称，对应的为客户端授权的scope
             };
             services.AddOcelot().AddAhphOcelot(option =>
             {
+                option.EnableTimer = true;
                 option.DbConnectionStrings = "server=localhost;database=ocelotgetwaydb;user=root;password=123456;";//port=3306;SslMode=none;
                 //option.DbConnectionStrings = "Server=.;Database=ocelotgetwaydb;User ID=sa;Password=123;";
                 option.RedisConnectionStrings = new List<string>() {

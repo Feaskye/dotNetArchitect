@@ -26,10 +26,9 @@ namespace SkyCore.AhphOcelot.Configuration
         /// 2018-11.12
         /// 定时器周期，单位（毫秒），默认30分总自动更新一次
         /// </summary>
-        public int TimerDelay { get; set; } = 30 * 60 * 1000;
+        public int TimerDelay { get; set; } = 10 * 60 * 1000;
 
         /// <summary>
-        
         /// 2018-11-14
         /// Redis连接字符串
         /// </summary>
