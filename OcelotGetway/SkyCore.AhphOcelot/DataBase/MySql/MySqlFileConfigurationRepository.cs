@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace SkyCore.AhphOcelot.DataBase.MySql
 {
@@ -38,79 +39,83 @@ namespace SkyCore.AhphOcelot.DataBase.MySql
             //提取全局配置信息
             using (var connection = new MySqlConnection(_option.DbConnectionStrings))
             {
-                var result = await connection.QueryFirstOrDefaultAsync<AhphGlobalConfiguration>(glbsql);
-                if (result != null)
+                var configurations = (await connection.QueryAsync<AhphGlobalConfiguration>(glbsql)).AsList();
+                if (configurations != null && configurations.Any())
                 {
-                    var glb = new FileGlobalConfiguration();
-                    //赋值全局信息
-                    glb.BaseUrl = result.BaseUrl;
-                    glb.DownstreamScheme = result.DownstreamScheme;
-                    glb.RequestIdKey = result.RequestIdKey;
-                    if (!String.IsNullOrEmpty(result.HttpHandlerOptions))
+                    var reroutelist = new List<FileReRoute>();
+                    foreach (var result in configurations)
                     {
-                        glb.HttpHandlerOptions = result.HttpHandlerOptions.ToObject<FileHttpHandlerOptions>();
-                    }
-                    if (!String.IsNullOrEmpty(result.LoadBalancerOptions))
-                    {
-                        glb.LoadBalancerOptions = result.LoadBalancerOptions.ToObject<FileLoadBalancerOptions>();
-                    }
-                    if (!String.IsNullOrEmpty(result.QoSOptions))
-                    {
-                        glb.QoSOptions = result.QoSOptions.ToObject<FileQoSOptions>();
-                    }
-                    if (!String.IsNullOrEmpty(result.ServiceDiscoveryProvider))
-                    {
-                        glb.ServiceDiscoveryProvider = result.ServiceDiscoveryProvider.ToObject<FileServiceDiscoveryProvider>();
-                    }
-                    file.GlobalConfiguration = glb;
-
-                    //提取所有路由信息
-                    string routesql = "select T2.* from AhphConfigReRoutes T1 inner join AhphReRoute T2 on T1.ReRouteId=T2.ReRouteId where AhphId=@AhphId and InfoStatus=1";
-                    var routeresult = (await connection.QueryAsync<AhphReRoute>(routesql, new { result.AhphId }))?.AsList();
-                    if (routeresult != null && routeresult.Count > 0)
-                    {
-                        var reroutelist = new List<FileReRoute>();
-                        foreach (var model in routeresult)
+                        var glb = new FileGlobalConfiguration();
+                        //赋值全局信息
+                        glb.BaseUrl = result.BaseUrl;
+                        glb.DownstreamScheme = result.DownstreamScheme;
+                        glb.RequestIdKey = result.RequestIdKey;
+                        if (!String.IsNullOrEmpty(result.HttpHandlerOptions))
                         {
-                            var m = new FileReRoute();
-                            if (!String.IsNullOrEmpty(model.AuthenticationOptions))
-                            {
-                                m.AuthenticationOptions = model.AuthenticationOptions.ToObject<FileAuthenticationOptions>();
-                            }
-                            if (!String.IsNullOrEmpty(model.CacheOptions))
-                            {
-                                m.FileCacheOptions = model.CacheOptions.ToObject<FileCacheOptions>();
-                            }
-                            if (!String.IsNullOrEmpty(model.DelegatingHandlers))
-                            {
-                                m.DelegatingHandlers = model.DelegatingHandlers.ToObject<List<string>>();
-                            }
-                            if (!String.IsNullOrEmpty(model.LoadBalancerOptions))
-                            {
-                                m.LoadBalancerOptions = model.LoadBalancerOptions.ToObject<FileLoadBalancerOptions>();
-                            }
-                            if (!String.IsNullOrEmpty(model.QoSOptions))
-                            {
-                                m.QoSOptions = model.QoSOptions.ToObject<FileQoSOptions>();
-                            }
-                            if (!String.IsNullOrEmpty(model.DownstreamHostAndPorts))
-                            {
-                                m.DownstreamHostAndPorts = model.DownstreamHostAndPorts.ToObject<List<FileHostAndPort>>();
-                            }
-                            //开始赋值
-                            m.DownstreamPathTemplate = model.DownstreamPathTemplate;
-                            m.DownstreamScheme = model.DownstreamScheme;
-                            m.Key = model.RequestIdKey;
-                            m.Priority = model.Priority ?? 0;
-                            m.RequestIdKey = model.RequestIdKey;
-                            m.ServiceName = model.ServiceName;
-                            m.UpstreamHost = model.UpstreamHost;
-                            m.UpstreamHttpMethod = model.UpstreamHttpMethod?.ToObject<List<string>>();
-                            m.UpstreamPathTemplate = model.UpstreamPathTemplate;
-                            reroutelist.Add(m);
+                            glb.HttpHandlerOptions = result.HttpHandlerOptions.ToObject<FileHttpHandlerOptions>();
                         }
-                        file.ReRoutes = reroutelist;
+                        if (!String.IsNullOrEmpty(result.LoadBalancerOptions))
+                        {
+                            glb.LoadBalancerOptions = result.LoadBalancerOptions.ToObject<FileLoadBalancerOptions>();
+                        }
+                        if (!String.IsNullOrEmpty(result.QoSOptions))
+                        {
+                            glb.QoSOptions = result.QoSOptions.ToObject<FileQoSOptions>();
+                        }
+                        if (!String.IsNullOrEmpty(result.ServiceDiscoveryProvider))
+                        {
+                            glb.ServiceDiscoveryProvider = result.ServiceDiscoveryProvider.ToObject<FileServiceDiscoveryProvider>();
+                        }
+                        file.GlobalConfiguration = glb;
+
+                        //提取所有路由信息
+                        string routesql = "select T2.* from AhphConfigReRoutes T1 inner join AhphReRoute T2 on T1.ReRouteId=T2.ReRouteId where AhphId=@AhphId and InfoStatus=1";
+                        var routeresult = (await connection.QueryAsync<AhphReRoute>(routesql, new { result.AhphId }))?.AsList();
+                        if (routeresult != null && routeresult.Count > 0)
+                        {
+                            foreach (var model in routeresult)
+                            {
+                                var m = new FileReRoute();
+                                if (!String.IsNullOrEmpty(model.AuthenticationOptions))
+                                {
+                                    m.AuthenticationOptions = model.AuthenticationOptions.ToObject<FileAuthenticationOptions>();
+                                }
+                                if (!String.IsNullOrEmpty(model.CacheOptions))
+                                {
+                                    m.FileCacheOptions = model.CacheOptions.ToObject<FileCacheOptions>();
+                                }
+                                if (!String.IsNullOrEmpty(model.DelegatingHandlers))
+                                {
+                                    m.DelegatingHandlers = model.DelegatingHandlers.ToObject<List<string>>();
+                                }
+                                if (!String.IsNullOrEmpty(model.LoadBalancerOptions))
+                                {
+                                    m.LoadBalancerOptions = model.LoadBalancerOptions.ToObject<FileLoadBalancerOptions>();
+                                }
+                                if (!String.IsNullOrEmpty(model.QoSOptions))
+                                {
+                                    m.QoSOptions = model.QoSOptions.ToObject<FileQoSOptions>();
+                                }
+                                if (!String.IsNullOrEmpty(model.DownstreamHostAndPorts))
+                                {
+                                    m.DownstreamHostAndPorts = model.DownstreamHostAndPorts.ToObject<List<FileHostAndPort>>();
+                                }
+                                //开始赋值
+                                m.DownstreamPathTemplate = model.DownstreamPathTemplate;
+                                m.DownstreamScheme = model.DownstreamScheme;
+                                m.Key = model.RequestIdKey;
+                                m.Priority = model.Priority ?? 0;
+                                m.RequestIdKey = model.RequestIdKey;
+                                m.ServiceName = model.ServiceName;
+                                m.UpstreamHost = model.UpstreamHost;
+                                m.UpstreamHttpMethod = model.UpstreamHttpMethod?.ToObject<List<string>>();
+                                m.UpstreamPathTemplate = model.UpstreamPathTemplate;
+                                reroutelist.Add(m);
+                            }
+
+                        }
                     }
+                    file.ReRoutes = reroutelist;
                 }
                 else
                 {
