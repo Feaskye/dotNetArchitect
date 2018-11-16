@@ -9,12 +9,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkyCore.AhphOcelot", "SkyCo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E120A0EA-B693-444E-9FE9-8034FB85DE0F}"
 	ProjectSection(SolutionItems) = preProject
+		OcelotGetwayDB_Mysql.sql = OcelotGetwayDB_Mysql.sql
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyCore.IdServerApi", "SkyCore.IdServerApi\SkyCore.IdServerApi.csproj", "{9C410021-E9B2-4C1A-8FA8-CB688002B1DE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkyCore.IdServerApi", "SkyCore.IdServerApi\SkyCore.IdServerApi.csproj", "{9C410021-E9B2-4C1A-8FA8-CB688002B1DE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebAppA", "WebAppA\WebAppA.csproj", "{91BE64AF-FE2D-4BE4-875E-AFB44528E954}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAppA", "WebAppA\WebAppA.csproj", "{91BE64AF-FE2D-4BE4-875E-AFB44528E954}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
